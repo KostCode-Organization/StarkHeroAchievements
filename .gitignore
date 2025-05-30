@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+app/__pycache__/
+app/api/__pycache__/
+app/api/endpoints/__pycache__/
+app/core/__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+dist/
+build/
+.env
+.env.example
+.venv/
+venv/
+poetry.lock
+
+# Node/Vite/React
+frontend_app/node_modules/
+frontend_app/dist/
+frontend_app/.env
+frontend_app/.vite
+
+# Docker
+*.pid
+*.log
+docker-compose.override.yml
+
+# OS/Editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Test/coverage
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+
+# Misc
+*.sqlite3
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log* 
