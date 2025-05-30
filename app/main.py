@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+from app.api.endpoints.github import router as github_router
+
+load_dotenv()
 
 app = FastAPI()
 
@@ -11,6 +15,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Import and include routers here
-# from app.api.router import api_router
-# app.include_router(api_router) 
+app.include_router(github_router, prefix="/api")
