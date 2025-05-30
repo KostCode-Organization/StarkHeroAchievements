@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "starkheroachievements"
+version = "0.1.0"
+description = "A FastAPI backend for a Web3-integrated achievement and NFT platform."
+authors = ["Your Name <your@email.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+SQLAlchemy = "*"
+psycopg2-binary = "*"
+python-dotenv = "*"
+pydantic = "*"
+web3 = "*"
+celery = "*"
+redis = "*"
+httpx = "*"
+aiohttp = "*"
+python-jose = {extras = ["cryptography"], version = "*"}
+passlib = {extras = ["bcrypt"], version = "*"}
+requests = "*"
+authlib = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api" 
