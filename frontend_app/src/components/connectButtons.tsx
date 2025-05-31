@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGithubUser } from '../context/githubUserContext';
 
 // Global context for GitHub user data
-const BACKEND_URL = 'http://backend';
+const BACKEND_URL = 'http://64.226.116.114:8000';
 
 interface ConnectButtons {
   withoutWallet?: boolean;
