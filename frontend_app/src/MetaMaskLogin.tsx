@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ProfileCard from './ProfileCard';
 
 const BACKEND_URL = 'http://localhost:8000'; // Change if your backend runs elsewhere
 
@@ -72,9 +73,10 @@ const MetaMaskLogin = () => {
           <code style={{ wordBreak: 'break-all' }}>{githubToken}</code>
         </div>
       )}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="text-red-500 mt-4">{error}</p>}
+      {/* <ProfileCard /> */}
     </div>
   );
 };
 
-export default MetaMaskLogin; 
+export default MetaMaskLogin;
