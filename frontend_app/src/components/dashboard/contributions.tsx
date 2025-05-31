@@ -1,23 +1,58 @@
+import { useGithubUser } from '../../context/githubUserContext';
+import { useMemo } from 'react';
+
+function formatDate(dateStr: string) {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  const day = date.getDate();
+  const month = date.toLocaleString('default', { month: 'long' });
+  const suffix = (d: number) => (d > 3 && d < 21) ? 'th' : ['st', 'nd', 'rd'][((d % 10) - 1)] || 'th';
+  return `${month} ${day}${suffix(day)}`;
+}
+
 export default function Contributions() {
-  // Example: 52 weeks x 7 days = 364 days (GitHub style)
-  // Each value is number of contributions for that day
+  const { githubActivity } = useGithubUser();
+  // Count contributions per day
+  const dayCounts: Record<string, number> = {};
+  if (githubActivity && Array.isArray(githubActivity)) {
+    githubActivity.forEach((item: any) => {
+      // Only use YYYY-MM-DD for grouping
+      const day = item[3]?.slice(0, 10);
+      if (day) dayCounts[day] = (dayCounts[day] || 0) + 1;
+    });
+  }
+  // Sort days descending (most recent first)
+  const sortedDays = Object.keys(dayCounts).sort((a, b) => b.localeCompare(a));
+
   const daysInWeek = 7;
   const weeksInYear = 52;
-  // Generate random data for demo; replace with real data as needed
-  const contributions: number[][] = Array.from({ length: weeksInYear }, () =>
-    Array.from({ length: daysInWeek }, () => Math.floor(Math.random() * 10))
-  );
 
-  // Color scale for contributions (0 = gray-800, 1-2 = teal-900, 3-5 = teal-800, 6+
+  // Build a set of YYYY-MM-DD strings for days with activity
+  const activityDays = useMemo(() => {
+    if (!githubActivity || !Array.isArray(githubActivity)) return new Set();
+    return new Set(githubActivity.map((item) => item[3]?.slice(0, 10)));
+  }, [githubActivity]);
+
+  // Build the grid: for each day in the past 52 weeks, mark 1 if activity, 0 if not
+  const today = new Date();
+  const contributions: { count: number; date: string }[][] = [];
+  for (let w = 0; w < weeksInYear; w++) {
+    const week: { count: number; date: string }[] = [];
+    for (let d = 0; d < daysInWeek; d++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - ((weeksInYear - 1 - w) * 7 + d));
+      const iso = date.toISOString().slice(0, 10);
+      week.push({ count: activityDays.has(iso) ? 1 : 0, date: iso });
+    }
+    contributions.push(week);
+  }
+
   function getColor(count: number) {
     if (count === 0) return 'bg-gray-800';
-    if (count < 3) return 'bg-teal-900';
-    if (count < 6) return 'bg-teal-800';
     return 'bg-teal-600';
   }
 
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
   return (
     <div className="self-stretch flex flex-col justify-start items-start gap-7">
@@ -36,13 +71,17 @@ export default function Contributions() {
           <div className="grid" style={{ gridTemplateColumns: `repeat(${weeksInYear}, minmax(0, 1fr))`, gap: '4px' }}>
             {contributions.map((week, weekIdx) => (
               <div key={weekIdx} className="flex flex-col gap-1">
-                {week.map((count, dayIdx) => (
-                  <div
-                    key={dayIdx}
-                    className={`w-full aspect-square rounded ${getColor(count)}`}
-                    title={`${dayNames[dayIdx]}, Week ${weekIdx + 1}: ${count} contributions`}
-                  />
-                ))}
+                {week.map((cell, dayIdx) => {
+                  const contributionCount = dayCounts[cell.date] || 0;
+                  const dateFormatted = formatDate(cell.date);
+                  return (
+                    <div
+                      key={dayIdx}
+                      className={`w-full aspect-square rounded ${getColor(cell.count)}`}
+                      title={`${dateFormatted}: ${contributionCount} contribution${contributionCount !== 1 ? 's' : ''}`}
+                    />
+                  );
+                })}
               </div>
             ))}
           </div>
