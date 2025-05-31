@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from app.core.config import settings
 import httpx
 import httpx, secrets
-
+from app.services.github import get_closed_issues
 router = APIRouter()
 
 GITHUB_OAUTH_URL = (
@@ -42,7 +42,7 @@ async def github_callback(request: Request):
         if not access_token:
             raise HTTPException(400, f"GitHub did not return an access_token: {token_json}")
 
-        return token_json  # Here you would typically store the token securely
+        # return token_json  # Here you would typically store the token securely
         # 2️⃣ use the token once to grab the user’s GitHub identity
         user_resp = await client.get(
             "https://api.github.com/user",
@@ -54,8 +54,8 @@ async def github_callback(request: Request):
             raise HTTPException(500, f"GitHub /user failed: {user_resp.text}")
         gh_user = user_resp.json()
 
-    return gh_user  # Here you would typically create or update the user in your database
-    # return {"code": code, "message": "Received code. Implement token exchange and user logic here."}
+    # return gh_user
+    return gh_user, get_closed_issues(access_token, gh_user['login'])  # Here you would typically create or update the user in your database
 
 @router.post("/github/token")
 async def github_token(code: str = Body(..., embed=True)):
