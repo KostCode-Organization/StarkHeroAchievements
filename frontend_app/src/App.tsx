@@ -1,22 +1,24 @@
-import './App.css';
-import MetaMaskLogin from './MetaMaskLogin';
-import Dashboard from './Dashboard';
+import { GithubUserProvider } from './context/githubUserContext';
+import ConnectButtons from './components/connectButtons';
+import Dashboard from './components/dashboard';
 
 function App() {
   return (
-    <div className="min-h-screen w-full flex flex-col bg-zinc-950">
-      <header className="flex items-center px-40 py-4 bg-zinc-950">
-        <div className="flex-1" />
-        <div className="flex gap-4 justify-end items-center">
-          <MetaMaskLogin inlineHeader />
-        </div>
-      </header>
-      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto">
-        <div>
-          <Dashboard />
-        </div>
-      </main>
-    </div>
+    <GithubUserProvider>
+      <div className="min-h-screen w-full flex flex-col bg-zinc-950">
+        <header className="flex items-center px-40 py-4 bg-zinc-950">
+          <div className="flex-1" />
+          <div className="flex gap-4 justify-end items-center">
+            <ConnectButtons inlineHeader />
+          </div>
+        </header>
+        <main className="flex-1 flex flex-col items-center justify-center w-full mx-auto">
+          <div>
+            <Dashboard />
+          </div>
+        </main>
+      </div>
+    </GithubUserProvider>
   );
 }
 

@@ -34,7 +34,6 @@ def contributor_count(full):
 
 
 def get_closed_issues(token, username):
-
     s = requests.Session()
     s.headers.update({
         "Authorization": f"Bearer {token}",
@@ -78,22 +77,64 @@ def get_closed_issues(token, username):
     # 2)  Pull your closed issues / PRs only from repos with ≥ 5 contributors
     # ------------------------------------------------------------------
     closed_by_me = []                       # (repo, #, title, closed_at)
-
+    closed_days = set()
     for full in repos:
-        if contributors_by_repo[full] < 5:      # ✂️  skip “small” repos
+        if contributors_by_repo[full] < 5:
             continue
-
         owner, repo = full.split("/")
         for issue in pages(s,
             f"https://api.github.com/repos/{owner}/{repo}/issues",
             {"state": "closed", "per_page": 100, "creator": username},
         ):
-            if issue.get("user", {}).get("login") == username:        # double-check
+            if issue.get("user", {}).get("login") == username:
                 closed_by_me.append(
                     (full, issue["number"], issue["title"], issue["closed_at"])
                 )
-
-    # ── pretty-print ──────────────────────────────────────────────────────────────
-    print(f"\nClosed issues authored by {username}: {len(closed_by_me)}\n")
-
-    return closed_by_me
+                if issue.get("closed_at"):
+                    closed_days.add(issue["closed_at"][:10])
+    # Calculate streak statistics
+    if not closed_days:
+        return {"closed": closed_by_me, "streak": 0, "max_streak": 0, "contribution_days": []}
+    
+    from datetime import datetime, timedelta
+    
+    # Convert to sorted list of date objects
+    dates = sorted([datetime.strptime(day, "%Y-%m-%d").date() for day in closed_days])
+    
+    # Find all consecutive streaks
+    streaks = []
+    current_streak = 1
+    
+    for i in range(1, len(dates)):
+        if (dates[i] - dates[i-1]).days == 1:
+            # Consecutive day
+            current_streak += 1
+        else:
+            # Streak broken, record the current streak and start new one
+            streaks.append(current_streak)
+            current_streak = 1
+    
+    # Don't forget the last streak
+    streaks.append(current_streak)
+    
+    # Find the maximum streak (longest consecutive sequence)
+    max_streak = max(streaks) if streaks else 0
+    
+    # Calculate current streak (ending today or recently)
+    today = datetime.utcnow().date()
+    current_streak_count = 0
+    
+    # Check backwards from today to find current active streak
+    check_date = today
+    while check_date.isoformat() in closed_days:
+        current_streak_count += 1
+        check_date -= timedelta(days=1)
+    
+    # If no activity today, check if there's a recent streak (within last 2 days)
+    if current_streak_count == 0:
+        check_date = today - timedelta(days=1)
+        while check_date.isoformat() in closed_days and (today - check_date).days <= 2:
+            current_streak_count += 1
+            check_date -= timedelta(days=1)
+    
+    return {"closed": closed_by_me, "streak": current_streak_count, "max_streak": max_streak, "contribution_days": list(closed_days)}
