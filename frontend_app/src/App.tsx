@@ -1,14 +1,23 @@
 import './App.css';
 import MetaMaskLogin from './MetaMaskLogin';
-import ProfileCard from './ProfileCard';
+import Dashboard from './Dashboard';
 
 function App() {
   return (
-    <div className="App" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
-      <MetaMaskLogin />
-      <ProfileCard />
+    <div className="min-h-screen w-full flex flex-col bg-zinc-950">
+      <header className="flex items-center px-40 py-4 bg-zinc-950">
+        <div className="flex-1" />
+        <div className="flex gap-4 justify-end items-center">
+          <MetaMaskLogin inlineHeader />
+        </div>
+      </header>
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto">
+        <div>
+          <Dashboard />
+        </div>
+      </main>
     </div>
   );
 }
 
-export default App; 
+export default App;
