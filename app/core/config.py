@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     db_host: str = "db"
     db_port: int = 5432
 
+    openai_api_key: str = "asdads"
+
     class Config:
         env_file = ".env"
         extra = "ignore"  # Ignore extra environment variables
