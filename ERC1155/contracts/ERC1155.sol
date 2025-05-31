@@ -28,7 +28,7 @@ contract MultiTypeNFT is ERC1155, Ownable {
      */
     constructor(string memory baseURI_)
         ERC1155(baseURI_)
-        Ownable(msg.sender) //  ← required beginning with OZ v5
+        Ownable(msg.sender) 
     {}
 
     // ─────────────────────────────────────────────
