@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useGithubUser } from '../context/githubUserContext';
 
 // Global context for GitHub user data
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'http://backend';
 
 interface ConnectButtons {
   withoutWallet?: boolean;
@@ -48,7 +48,7 @@ const ConnectButtons = ({ withoutWallet }: ConnectButtons) => {
     const url = new URL(window.location.href);
     const githubKey = url.searchParams.get('github_key');
     if (githubKey) {
-      fetch(`http://localhost:8000/api/github/data?key=${githubKey}`)
+      fetch(`${BACKEND_URL}/api/github/data?key=${githubKey}`)
         .then(res => res.json())
         .then(decoded => {
           setGithubUser(decoded.user);
