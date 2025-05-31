@@ -13,12 +13,12 @@ function Achievement({ achievement }: { achievement: AchievementProps }) {
       <img className="size-[100px]" src={achievement.icon} alt="Locked Achievement Icon" />
       {achievement.status === 'locked' && (
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 text-white text-sm px-2 py-1 rounded flex justify-center items-center">
-          <span className="text-gray-500 text-sm">Locked</span>
+          <span className="text-red-500 font-bold">Locked</span>
         </div>
       )}
       {achievement.status === 'unlocked' && (
         <div className="absolute top-0 left-0 w-full h-full bg-green-500 bg-opacity-50 text-white text-sm px-2 py-1 rounded flex justify-center items-center">
-          <span className="text-green-200 text-sm">Mint</span>
+          <span className="text-[aqua] font-bold">Mint</span>
         </div>
       )}
     </div>
@@ -28,16 +28,18 @@ function Achievement({ achievement }: { achievement: AchievementProps }) {
 export default function Achievements() {
   const { wallet } = useGithubUser();
   const achievements = [
-    { id: 1, name: 'First task completed', icon: 'https://ipfs.io/ipfs/Qmb5CuL1G95RWbNpqiawSg4SAo2mBbj7gVkeWK5jCwAGaY', status: 'locked' },
-    { id: 2, name: 'Month contributor', icon: 'https://ipfs.io/ipfs/QmNoRyj4ko99CD1hyTuDNkk2t8zhqkzf8qUHvCdTTb7278', status: 'unlocked' },
-    { id: 3, name: '50 tasks completed', icon: 'https://ipfs.io/ipfs/QmddmrGqEGpg2uHSVNe99WQP4zisbSkjuv2bxJBq36Ci9F', status: 'minted' },
+    { id: 1, name: '1st task completed', icon: 'https://ipfs.io/ipfs/QmXyzgb9gwFJF6ZLFhb81wdKRLF3wMjv4Z3XFacBgcFuyi', status: 'locked' },
+    { id: 2, name: '5 tasks completed', icon: 'https://ipfs.io/ipfs/QmbQq69e74HaUaeMqc5QfRT4XqnLHnPSsUTD38G55AY924', status: 'unlocked' },
+    { id: 2, name: '25 tasks completed', icon: 'https://ipfs.io/ipfs/QmXNaWyD2spezcJiKS9Yy9dXkov3Knr7RG6g42GwJ7K5CM', status: 'locked' },
+    { id: 3, name: '50 tasks completed', icon: 'https://ipfs.io/ipfs/QmY4qGKtzcdmTJTMEC3UWrGUPrY8UZYn6Vht1GeeHEErfS', status: 'minted' },
+    { id: 2, name: 'Month contributor', icon: 'https://ipfs.io/ipfs/QmemcR2kiXFmrQWCZUaaTTKbqbXSKdaPVqfMgixrBybgFt', status: 'unlocked' },
   ];
 
   return (
     <div className="self-stretch p-5 bg-slate-950 rounded-2xl outline outline-2 outline-offset-[-2px] outline-slate-900 flex flex-col justify-start items-start gap-3.5 overflow-hidden">
       <div className="justify-center text-white text-3xl font-bold font-['Work_Sans'] leading-9">Achievements</div>
       {wallet ? (
-        <div className="inline-flex justify-start items-start gap-2.5">
+        <div className="inline-flex justify-start items-start gap-2.5 flex-wrap">
           {achievements.map((achievement) => (
             <div key={achievement.id} className="flex flex-col items-center">
               <Achievement achievement={achievement} />
