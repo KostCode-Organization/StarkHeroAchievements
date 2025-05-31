@@ -84,6 +84,7 @@ async def github_callback(request: Request, background_tasks: BackgroundTasks):
     GITHUB_DATA_CACHE[key] = {
         "data": {
             "user": gh_user,
+            "used_ai": activity_data["used_ai"],
             "activity": activity_data["activity"],  # Changed from "closed" to "activity"
             "contribution_days": activity_data["contribution_days"]
         },
