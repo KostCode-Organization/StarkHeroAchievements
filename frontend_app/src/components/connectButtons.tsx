@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useGithubUser } from '../context/githubUserContext';
 
+// Global context for GitHub user data
 const BACKEND_URL = 'http://localhost:8000';
 
 interface ConnectButtons {
@@ -9,8 +11,7 @@ interface ConnectButtons {
 const ConnectButtons = ({ inlineHeader }: ConnectButtons) => {
   const [wallet, setWallet] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [githubToken, setGithubToken] = useState<string | null>(null);
-  const [githubLoading, setGithubLoading] = useState(false);
+  const { githubUser, setGithubUser, setGithubActivity, setGithubStreak, setGithubMaxStreak } = useGithubUser();
 
   const connectWallet = async () => {
     setError(null);
@@ -26,30 +27,29 @@ const ConnectButtons = ({ inlineHeader }: ConnectButtons) => {
     }
   };
 
-  const handleGitHubLogin = () => {
-    window.location.href = `${BACKEND_URL}/api/github/login`;
-  };
-
-  // Handle GitHub OAuth callback
+  // On mount, check for github_data param in URL
   useEffect(() => {
     const url = new URL(window.location.href);
-    const code = url.searchParams.get('code');
-    if (code) {
-      setGithubLoading(true);
-      fetch(`${BACKEND_URL}/api/github/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
-      })
-        .then(async (res) => {
-          if (!res.ok) throw new Error('Failed to fetch token');
-          const data = await res.json();
-          setGithubToken(data.access_token || JSON.stringify(data));
+    const githubKey = url.searchParams.get('github_key');
+    if (githubKey) {
+      fetch(`http://localhost:8000/api/github/data?key=${githubKey}`)
+        .then(res => res.json())
+        .then(decoded => {
+          setGithubUser(decoded.user);
+          setGithubActivity(decoded.closed);
+          setGithubStreak(decoded.streak);
+          setGithubMaxStreak(decoded.max_streak);
         })
-        .catch((err) => setError(err.message))
-        .finally(() => setGithubLoading(false));
+        .catch(() => setError('Failed to fetch GitHub data'));
+      url.searchParams.delete('github_key');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
     }
-  }, []);
+  }, [setGithubUser, setGithubActivity, setGithubStreak, setGithubMaxStreak]);
+
+  const handleGitHubLogin = () => {
+    const redirectUri = window.location.origin + window.location.pathname;
+    window.location.href = `${BACKEND_URL}/api/github/login?redirect_uri=${encodeURIComponent(redirectUri)}`;
+  };
 
   if (inlineHeader) {
     return (
@@ -70,7 +70,7 @@ const ConnectButtons = ({ inlineHeader }: ConnectButtons) => {
           onClick={handleGitHubLogin}
           className="px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg text-sm font-medium shadow transition-colors"
         >
-          Connect GitHub
+          {githubUser && githubUser.login ? githubUser.login : 'Connect GitHub'}
         </button>
       </div>
     );
@@ -104,18 +104,16 @@ const ConnectButtons = ({ inlineHeader }: ConnectButtons) => {
           marginBottom: 16,
         }}
       >
-        Login with GitHub
+        {githubUser && githubUser.login ? githubUser.login : 'Login with GitHub'}
       </button>
-      {githubLoading && <p>Loading GitHub token...</p>}
-      {githubToken && (
-        <div>
-          <p>GitHub Access Token:</p>
-          <code style={{ wordBreak: 'break-all' }}>{githubToken}</code>
-        </div>
-      )}
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
 };
 
 export default ConnectButtons;
+
+// Usage in other components:
+// import { useGithubUser } from '../context/githubUserContext';
+// const { githubUser, githubActivity } = useGithubUser();
+// Now you can use githubUser and githubActivity anywhere in your app.
