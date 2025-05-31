@@ -1,8 +1,8 @@
 import { useGithubUser } from '../../context/githubUserContext';
-import { useMemo } from 'react';
+import { use, useMemo } from 'react';
 
 export default function RecentActivity() {
-  const { githubActivity } = useGithubUser();
+  const { githubActivity, usedAI } = useGithubUser();
   
   // githubActivity: [(repo, #, title, closed_at, type), ...]
   const { activities, totalIssueCount } = useMemo(() => {
@@ -13,13 +13,16 @@ export default function RecentActivity() {
       
       const recentActivities = allIssues
         .reverse()
-        .map((item) => ({
+        .map((item, idx) => ({
           repo: item[0],
           number: item[1],
           title: item[2],
           closed_at: item[3],
+          usedAI: usedAI[idx] || false,
           type: item[4] || 'issue',
         }));
+
+      console.log('Recent activities:', recentActivities);
       
       return {
         activities: recentActivities,
@@ -101,6 +104,9 @@ export default function RecentActivity() {
                 </div>
               </div>
               <div className='flex items-center gap-2.5'>
+                {activity.usedAI && (
+                  <span className="text-xs text-red-500">AI</span>
+                )}
                 <a
                   href={`https://github.com/${activity.repo}`}
                   target="_blank"

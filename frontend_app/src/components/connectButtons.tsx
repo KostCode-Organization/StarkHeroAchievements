@@ -10,7 +10,7 @@ interface ConnectButtons {
 
 const ConnectButtons = ({ withoutWallet }: ConnectButtons) => {
   const [error, setError] = useState<string | null>(null);
-  const { githubUser, setGithubUser, setGithubActivity, setGithubContributionDays, wallet, setWallet } = useGithubUser();
+  const { githubUser, setGithubUser, setUsedAI, setGithubActivity, setGithubContributionDays, wallet, setWallet } = useGithubUser();
 
   const connectWallet = async () => {
     setError(null);
@@ -52,6 +52,7 @@ const ConnectButtons = ({ withoutWallet }: ConnectButtons) => {
         .then(res => res.json())
         .then(decoded => {
           setGithubUser(decoded.user);
+          setUsedAI(decoded.used_ai);
           setGithubActivity(decoded.activity);  // Changed from decoded.closed to decoded.activity
           setGithubContributionDays(decoded.contribution_days || []);
         })
@@ -59,7 +60,7 @@ const ConnectButtons = ({ withoutWallet }: ConnectButtons) => {
       url.searchParams.delete('github_key');
       window.history.replaceState({}, document.title, url.pathname + url.search);
     }
-  }, [setGithubUser, setGithubActivity, setGithubContributionDays]);
+  }, [setGithubUser, setGithubActivity, setGithubContributionDays, setUsedAI]);
 
   const handleGitHubLogin = () => {
     const redirectUri = window.location.origin + window.location.pathname;
