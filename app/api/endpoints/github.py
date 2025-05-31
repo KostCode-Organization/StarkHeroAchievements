@@ -79,14 +79,12 @@ async def github_callback(request: Request, background_tasks: BackgroundTasks):
             assigned_issues = assigned_issues_resp.json()
         gh_user["assigned_issues"] = assigned_issues
         activity_data = get_closed_issues(access_token, gh_user['login'])
-    # Encode user, closed issues, streak, max_streak, and contribution_days as base64 JSON and redirect to frontend
+    # Encode user, activity, and contribution_days as base64 JSON and redirect to frontend
     key = secrets.token_urlsafe(16)
     GITHUB_DATA_CACHE[key] = {
         "data": {
             "user": gh_user,
-            "closed": activity_data["closed"],
-            "streak": activity_data["streak"],
-            "max_streak": activity_data["max_streak"],
+            "activity": activity_data["activity"],  # Changed from "closed" to "activity"
             "contribution_days": activity_data["contribution_days"]
         },
         "timestamp": time.time()
