@@ -59,18 +59,22 @@ export const GithubUserContext = createContext<{
   githubStreak: number;
   githubMaxStreak: number;
   githubContributionDays: string[];
+  wallet: string | null;
   setGithubUser: (user: any) => void;
   setGithubActivity: (activity: any) => void;
   setGithubContributionDays: (days: string[]) => void;
+  setWallet: (wallet: string | null) => void;
 }>({
   githubUser: null,
   githubActivity: null,
   githubStreak: 0,
   githubMaxStreak: 0,
   githubContributionDays: [],
+  wallet: null,
   setGithubUser: () => {},
   setGithubActivity: () => {},
   setGithubContributionDays: () => {},
+  setWallet: () => {},
 });
 
 export const useGithubUser = () => useContext(GithubUserContext);
@@ -79,6 +83,7 @@ export const GithubUserProvider = ({ children }: { children: React.ReactNode }) 
   const [githubUser, setGithubUser] = useState<any>(null);
   const [githubActivity, setGithubActivity] = useState<any>(null);
   const [githubContributionDays, setGithubContributionDaysState] = useState<string[]>([]);
+  const [wallet, setWallet] = useState<string | null>(null);
   
   // Calculate streaks whenever contribution days change
   const streaks = calculateStreaks(githubContributionDays);
@@ -94,9 +99,11 @@ export const GithubUserProvider = ({ children }: { children: React.ReactNode }) 
       githubStreak: streaks.currentStreak,
       githubMaxStreak: streaks.maxStreak,
       githubContributionDays,
+      wallet,
       setGithubUser, 
       setGithubActivity, 
-      setGithubContributionDays
+      setGithubContributionDays,
+      setWallet
     }}>
       {children}
     </GithubUserContext.Provider>

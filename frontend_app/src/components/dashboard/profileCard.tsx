@@ -1,7 +1,7 @@
 import { useGithubUser } from '../../context/githubUserContext';
 
 export default function ProfileCard() {
-  const { githubUser, githubStreak } = useGithubUser();
+  const { githubUser, githubStreak, githubMaxStreak } = useGithubUser();
 
   return (
     <div className="self-stretch px-14 py-12 bg-slate-950 rounded-2xl outline outline-2 outline-offset-[-2px] outline-slate-900 flex flex-col justify-start items-center gap-7 overflow-hidden">
@@ -16,7 +16,7 @@ export default function ProfileCard() {
             {githubUser && githubUser.name ? githubUser.name : 'Ava Nakamoto'}
           </div>
         </div>
-        <div className="justify-center text-white text-lg font-normal font-['Inter'] underline leading-snug">
+        <div className="justify-center text-white text-lg font-normal font-['Inter'] underline leading-snug text-nowrap">
           {githubUser && githubUser.html_url ? (
             <a href={githubUser.html_url} target="_blank" rel="noopener noreferrer">
               github.com/{githubUser.login}
@@ -26,11 +26,25 @@ export default function ProfileCard() {
           )}
         </div>
       </div>
-      {/* Progress bar: Contribution streak toward 30-day goal */}
-      <div className="self-stretch h-3.5 bg-gray-900 rounded-[20px] inline-flex justify-start items-start overflow-hidden">
-        <div className="bg-blue-900 rounded-[20px] transition-all duration-300" style={{ width: `${Math.min(100, (githubStreak / 30) * 100)}%`, height: '100%' }} />
+      {/* Streak Status Bar */}
+      <div className="self-stretch flex flex-col gap-2">
+        <div className="flex justify-between items-center">
+          <span className="text-white text-sm font-medium">Contribution Streak</span>
+          <span className="text-teal-400 text-sm font-bold">{githubStreak} / {githubMaxStreak} days</span>
+        </div>
+        <div className="self-stretch h-2 bg-gray-900 rounded-full overflow-hidden">
+          <div 
+            className="bg-gradient-to-r from-teal-600 to-teal-400 rounded-full transition-all duration-300" 
+            style={{ 
+              width: `${githubMaxStreak > 0 ? Math.min(100, (githubStreak / githubMaxStreak) * 100) : 0}%`, 
+              height: '100%' 
+            }} 
+          />
+        </div>
+        <div className="text-center text-gray-400 text-xs">
+          Current: {githubStreak} days • Best: {githubMaxStreak} days
+        </div>
       </div>
-      <div className="text-white text-xs mt-1">{githubStreak} day contribution streak (out of 30)</div>
     </div>
   );
 }
