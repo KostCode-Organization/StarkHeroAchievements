@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Request, Body
+from fastapi import APIRouter, Request, Body, Depends, HTTPException
 from fastapi.responses import RedirectResponse
 from app.core.config import settings
 import httpx
 import httpx, secrets
 from app.services.github import get_closed_issues
+from app.db.session import get_db
+from app.crud.helpers import create_user, create_achievement
 router = APIRouter()
 
 GITHUB_OAUTH_URL = (
@@ -72,3 +74,16 @@ async def github_token(code: str = Body(..., embed=True)):
         response.raise_for_status()
         token_data = response.json()
     return token_data
+
+
+@router.get("/")
+async def github_issues(username: str, db = Depends(get_db)):
+    return create_achievement(
+        db,
+        type_="github_issues",
+        description=f"GitHub issues for {username}",
+        # data={
+        #     "username": username,
+        #     # "issues": await get_closed_issues(username)
+        # }
+    )
