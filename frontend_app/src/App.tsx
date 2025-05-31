@@ -1,6 +1,5 @@
-import './App.css';
-import MetaMaskLogin from './MetaMaskLogin';
-import Dashboard from './Dashboard';
+import ConnectButtons from './components/connectButtons';
+import Dashboard from './components/dashboard';
 
 function App() {
   return (
@@ -8,10 +7,10 @@ function App() {
       <header className="flex items-center px-40 py-4 bg-zinc-950">
         <div className="flex-1" />
         <div className="flex gap-4 justify-end items-center">
-          <MetaMaskLogin inlineHeader />
+          <ConnectButtons inlineHeader />
         </div>
       </header>
-      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto">
+      <main className="flex-1 flex flex-col items-center justify-center w-full mx-auto">
         <div>
           <Dashboard />
         </div>

@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 
 const BACKEND_URL = 'http://localhost:8000';
 
-interface MetaMaskLoginProps {
+interface ConnectButtons {
   inlineHeader?: boolean;
 }
 
-const MetaMaskLogin = ({ inlineHeader }: MetaMaskLoginProps) => {
+const ConnectButtons = ({ inlineHeader }: ConnectButtons) => {
   const [wallet, setWallet] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [githubToken, setGithubToken] = useState<string | null>(null);
@@ -118,4 +118,4 @@ const MetaMaskLogin = ({ inlineHeader }: MetaMaskLoginProps) => {
   );
 };
 
-export default MetaMaskLogin;
+export default ConnectButtons;
