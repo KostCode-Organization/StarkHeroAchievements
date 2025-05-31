@@ -22,6 +22,7 @@ class User(Base):
     wallet_address = Column(String, unique=True, index=True, nullable=False)
     github_id      = Column(String, unique=True, index=True, nullable=True)
     github_username = Column(String, nullable=True)
+    issue_count    = Column(Integer, default=0, nullable=False)  # Number of issues assigned to the user
     created_at     = Column(DateTime, default=datetime.utcnow)
 
     # relationships
