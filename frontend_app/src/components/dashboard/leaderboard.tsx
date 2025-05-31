@@ -12,7 +12,7 @@ export default function Leaderboard() {
         <div key={entry.rank} className="self-stretch px-5 py-3 bg-gray-900 rounded-[10px] inline-flex justify-between items-center overflow-hidden">
           <div className="flex justify-start items-center gap-5">
             <div className="justify-center text-white text-xl font-bold font-['Work_Sans'] leading-7">{entry.rank}</div>
-            <a className="justify-center text-white text-xl font-normal font-['Work_Sans'] leading-7 hover:text-blue-300" href={"https://github.com/" + entry.name}>{entry.name}</a>
+            <a className="justify-center text-white text-[20px] font-normal font-['Work_Sans'] leading-7 hover:text-blue-300" href={"https://github.com/" + entry.name}>{entry.name}</a>
           </div>
         </div>
       ))}

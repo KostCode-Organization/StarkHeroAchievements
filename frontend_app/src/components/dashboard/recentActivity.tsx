@@ -8,19 +8,17 @@ export default function RecentActivity() {
   const { activities, totalIssueCount } = useMemo(() => {
     if (githubActivity && Array.isArray(githubActivity) && githubActivity.length > 0) {
       const allIssues = githubActivity.filter((item) => {
-        // Check if it's an issue (not a PR)
         return item[4] === 'issue' || (!item[4] && !item[2]?.toLowerCase().includes('pull request'));
       });
       
       const recentActivities = allIssues
-        .slice(0, 10) // Limit to recent 10 items for display
-        .reverse() // Most recent first
+        .reverse()
         .map((item) => ({
           repo: item[0],
           number: item[1],
           title: item[2],
           closed_at: item[3],
-          type: item[4] || 'issue', // Default to issue if type not specified
+          type: item[4] || 'issue',
         }));
       
       return {
@@ -28,10 +26,9 @@ export default function RecentActivity() {
         totalIssueCount: allIssues.length
       };
     }
-    return { activities: [], totalIssueCount: 0 }; // Return empty if no data
+    return { activities: [], totalIssueCount: 0 };
   }, [githubActivity]);
 
-  // Show loading state if githubActivity is null (not yet loaded)
   const isLoading = githubActivity === null;
 
   function formatTime(iso: string) {
@@ -72,12 +69,7 @@ export default function RecentActivity() {
         <div className="text-gray-400 text-sm">No recent issue activity found. Connect your GitHub account or close some issues to see activity here.</div>
       ) : (
         <>
-          {totalIssueCount > 10 && (
-            <div className="text-xs text-gray-400 font-['Work_Sans']">
-              Showing recent 10 of {totalIssueCount} total issues
-            </div>
-          )}
-          {activities.length > 5 && totalIssueCount <= 10 && (
+          {activities.length > 5 && (
             <div className="text-xs text-gray-400 font-['Work_Sans']">
               Scroll to see all {activities.length} activities
             </div>
@@ -92,7 +84,6 @@ export default function RecentActivity() {
         {activities.map((activity, idx) => (
           <div key={idx} className="self-stretch w-full">
             <div className="flex justify-between items-center w-full">
-              {/* Issue icon only (since we're only showing issues) */}
               <div className='flex w-full gap-2.5 items-center'>
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-blue-400 flex-shrink-0" style={{ minWidth: 32, minHeight: 32 }}>
                   <circle cx="16" cy="16" r="16" fill="#334155"/>
@@ -103,7 +94,7 @@ export default function RecentActivity() {
                     href={`https://github.com/${activity.repo}/issues/${activity.number}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:underline text-blue-300"
+                    className="hover:underline text-blue-300 text-nowrap"
                   >
                     {cutTitle(activity.title)}
                   </a>
@@ -114,7 +105,7 @@ export default function RecentActivity() {
                   href={`https://github.com/${activity.repo}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-blue-400 hover:underline"
+                  className="text-xs text-blue-400 hover:underline text-nowrap"
                 >
                   {activity.repo}
                 </a>
