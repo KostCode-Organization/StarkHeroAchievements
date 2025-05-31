@@ -24,43 +24,25 @@ services:
       timeout: 5s
       retries: 5
 
-  # redis:
-  #   image: redis:7
-  #   restart: always
-  #   ports:
-  #     - "6379:6379"
-  #   volumes:
-  #     - redis_data:/data
+  backend:
+    build: .
+    command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./app:/app/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - app_network
 
-  # backend:
-    # build: .
-    # command: poetry run uvicorn app.main:app --host 0.0.0.0 --port 8000
-    # volumes:
-    #   - ./app:/app/app
-    # ports:
-    #   - "8000:8000"
-    # environment:
-    #   DATABASE_URL: postgresql://user:password@db:5432/starkhero
-    #   REDIS_URL: redis://redis:6379/0
-    #   WEB3_PROVIDER_URI: ${WEB3_PROVIDER_URI}
-    #   CONTRACT_ADDRESS: ${CONTRACT_ADDRESS}
-    #   PRIVATE_KEY: ${PRIVATE_KEY}
-    #   GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
-    #   GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-    #   GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL}
-    #   SECRET_KEY: ${SECRET_KEY}
-    #   ALGORITHM: ${ALGORITHM}
-    # depends_on:
-    #   - db
-    #   - redis
-
-  # frontend_app:
-  #   build:
-  #     context: ./frontend_app
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   restart: unless-stopped
+  frontend_app:
+    build:
+      context: ./frontend_app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
 
 networks:
   app_network:
