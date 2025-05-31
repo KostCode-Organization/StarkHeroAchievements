@@ -2,6 +2,7 @@ from fastapi import APIRouter, Request, Body
 from fastapi.responses import RedirectResponse
 from app.core.config import settings
 import httpx
+import httpx, secrets
 
 router = APIRouter()
 
@@ -17,11 +18,44 @@ def github_login():
     return RedirectResponse(GITHUB_OAUTH_URL)
 
 @router.get("/github/callback")
-def github_callback(request: Request):
+async def github_callback(request: Request):
     """Handle GitHub OAuth callback (exchange code for token, etc)."""
     code = request.query_params.get("code")
     # Here you would exchange the code for an access token and handle user login/registration
-    return {"code": code, "message": "Received code. Implement token exchange and user logic here."}
+    async with httpx.AsyncClient() as client:
+        # 1️⃣ exchange the one-time code for an access token
+        token_resp = await client.post(
+            "https://github.com/login/oauth/access_token",
+            headers={"Accept": "application/json"},
+            data={
+                "client_id":     settings.github_client_id,
+                "client_secret": settings.github_client_secret,
+                "code":          code,
+                "redirect_uri":  settings.github_callback_url,
+            },
+            timeout=10,
+        )
+        if token_resp.status_code != 200:
+            raise HTTPException(500, f"GitHub token exchange failed: {token_resp.text}")
+        token_json = token_resp.json()
+        access_token = token_json.get("access_token")
+        if not access_token:
+            raise HTTPException(400, f"GitHub did not return an access_token: {token_json}")
+
+        return token_json  # Here you would typically store the token securely
+        # 2️⃣ use the token once to grab the user’s GitHub identity
+        user_resp = await client.get(
+            "https://api.github.com/user",
+            headers={"Authorization": f"Bearer {access_token}",
+                     "Accept": "application/vnd.github+json"},
+            timeout=10,
+        )
+        if user_resp.status_code != 200:
+            raise HTTPException(500, f"GitHub /user failed: {user_resp.text}")
+        gh_user = user_resp.json()
+
+    return gh_user  # Here you would typically create or update the user in your database
+    # return {"code": code, "message": "Received code. Implement token exchange and user logic here."}
 
 @router.post("/github/token")
 async def github_token(code: str = Body(..., embed=True)):
