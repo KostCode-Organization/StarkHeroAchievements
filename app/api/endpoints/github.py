@@ -33,7 +33,7 @@ def github_login():
 async def github_callback(request: Request, background_tasks: BackgroundTasks):
     """Handle GitHub OAuth callback (exchange code for token, etc)."""
     code = request.query_params.get("code")
-    redirect_uri = request.query_params.get("redirect_uri") or "http://64.226.116.114:3000/"
+    redirect_uri = request.query_params.get("redirect_uri") or "http://localhost:3000/"
     parsed = urlparse(redirect_uri)
     frontend_origin = f"{parsed.scheme}://{parsed.netloc}"
     async with httpx.AsyncClient() as client:
