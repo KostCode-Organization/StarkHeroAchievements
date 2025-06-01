@@ -9,8 +9,8 @@ function AppContent() {
   if (!githubUser || !githubUser.login) {
     return (
       <div className="min-h-screen w-full flex flex-col bg-zinc-950 items-center">
-        <main className="flex-1 flex flex-col items-center justify-center w-[100vw] items-center">
-          <div className="text-center text-white space-y-6 max-w-md flex flex-col items-center">
+        <main className="flex-1 flex flex-col justify-center w-[100vw] items-center">
+          <div className="text-center text-white space-y-6 flex flex-col items-center">
             <h1 className="text-4xl font-bold">Welcome</h1>
             <p className="text-gray-400 text-lg">
               Connect your GitHub account to track your achievements and contributions

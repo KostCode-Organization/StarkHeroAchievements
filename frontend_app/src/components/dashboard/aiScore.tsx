@@ -21,7 +21,7 @@ export default function AIScore() {
   const score = parseInt((contributions.aiUsed / contributions.total * 100).toFixed(0));
 
   return (
-    <div className="w-[30%] h-fit p-5 bg-blue-500/30 rounded-2xl outline outline-2 outline-offset-[-2px] outline-blue-500 inline-flex flex-col justify-start items-start gap-3.5 overflow-hidden">
+    <div className="w-full p-5 bg-blue-500/30 rounded-2xl outline outline-2 outline-offset-[-2px] outline-blue-500 inline-flex flex-col justify-start items-start gap-3.5 overflow-hidden">
       <div className="justify-center text-white text-2xl font-bold font-['Work_Sans'] leading-9">AI score</div>
       <GaugeComponent
         value={score}

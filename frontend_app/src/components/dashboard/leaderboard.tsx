@@ -1,10 +1,10 @@
 export default function Leaderboard() {
   const leaderboard = [
-    { rank: 1, name: 'vadim-ghostman' },
-    { rank: 2, name: 'faurdent' },
-    { rank: 3, name: 'waterscape03' },
-    { rank: 4, name: 'djeck1432' },
-    { rank: 5, name: 'zimaexe' },
+    { rank: 1, name: 'vadim-ghostman', achievements: 3 },
+    { rank: 2, name: 'faurdent', achievements: 2 },
+    { rank: 3, name: 'waterscape03', achievements: 2 },
+    { rank: 4, name: 'djeck1432', achievements: 1 },
+    { rank: 5, name: 'zimaexe', achievements: 1 },
   ];
 
   return (
@@ -16,6 +16,7 @@ export default function Leaderboard() {
             <div className="justify-center text-white text-xl font-bold font-['Work_Sans'] leading-7">{entry.rank}</div>
             <a className="justify-center text-white text-[18px] font-normal font-['Work_Sans'] leading-7 hover:text-blue-300" href={"https://github.com/" + entry.name}>{entry.name}</a>
           </div>
+          <p className="text-slate-300 text-xs">{entry.achievements} minted NFTs</p>
         </div>
       ))}
     </div>

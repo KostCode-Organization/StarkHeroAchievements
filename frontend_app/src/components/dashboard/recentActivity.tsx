@@ -1,7 +1,8 @@
 import { useGithubUser } from '../../context/githubUserContext';
 import { useMemo } from 'react';
+import type { ActivityProps } from '../dashboard';
 
-export default function RecentActivity({ show, setShowTab }: { show?: boolean, setShowTab?: (tab: string) => void }) {
+export default function RecentActivity({ show, setShowTab }: ActivityProps) {
   const { githubActivity, usedAI } = useGithubUser();
   
   // githubActivity: [(repo, #, title, closed_at, type), ...]
@@ -47,43 +48,43 @@ export default function RecentActivity({ show, setShowTab }: { show?: boolean, s
   }
 
   return (
-    <div className={`w-full p-5 bg-slate-950 rounded-2xl outline outline-2 outline-offset-[-2px] outline-slate-900 flex flex-col justify-start items-start overflow-hidden ${show ? 'gap-3.5' : 'gap-0'}`}>
+    <div className={`w-full p-5 bg-slate-950 rounded-2xl outline outline-2 outline-offset-[-2px] outline-slate-900 flex flex-col justify-start items-start overflow-hidden ${show.recent ? 'gap-3.5' : 'gap-0'}`}>
       <div className='flex items-center w-full justify-between'>
         <div
-          onClick={() => setShowTab ? setShowTab(show ? '' : 'recent') : null}
+          onClick={() => setShowTab ? setShowTab({ ...show, recent: !show.recent }) : null}
           className="justify-center cursor-pointer text-white text-2xl font-bold font-['Work_Sans'] leading-9"
         >
           Recent activity
         </div>
-        {setShowTab && (!show ? (
+        {setShowTab && (!show.recent ? (
           <button
             className="text-blue-400 hover:underline text-sm"
-            onClick={() => setShowTab('recent')}
+            onClick={() => setShowTab({ ...show, recent: true })}
           >
             View all
           </button>
         ) : (
           <button
             className="text-blue-400 hover:underline text-sm"
-            onClick={() => setShowTab('')}
+            onClick={() => setShowTab({ ...show, recent: false })}
           >
             Hide
           </button>
         ))}
       </div>
       <div className={`w-full transition-all duration-500 ease-in-out overflow-hidden ${
-        show ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+        show.recent ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
       }`}>
         <div className="flex flex-col gap-3.5">
           {activities.length === 0 ? (
             <div className={`text-gray-400 text-sm transition-all duration-300 ${
-              show ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
+              show.recent ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
             }`}>No recent issue activity found. Connect your GitHub account or close some issues to see activity here.</div>
           ) : (
             <>
               {activities.length > 5 && (
                 <div className={`text-xs text-gray-400 font-['Work_Sans'] transition-all duration-300 ${
-                  show ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
+                  show.recent ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
                 }`}>
                   Scroll to see all {activities.length} activities
                 </div>
@@ -99,17 +100,17 @@ export default function RecentActivity({ show, setShowTab }: { show?: boolean, s
                   <div 
                     key={idx} 
                     className={`self-stretch w-full transition-all duration-300 ${
-                      show ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
+                      show.recent ? 'transform translate-y-0 opacity-100' : 'transform translate-y-2 opacity-0'
                     }`}
                     style={{ 
-                      transitionDelay: show ? `${idx * 70}ms` : '0ms'
+                      transitionDelay: show.recent ? `${idx * 70}ms` : '0ms'
                     }}
                   >
                     <div className="flex justify-between items-center w-full">
                       <div className='flex w-full gap-2.5 items-center'>
-                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-blue-400 flex-shrink-0" style={{ minWidth: 32, minHeight: 32 }}>
-                          <circle cx="16" cy="16" r="16" fill="#334155"/>
-                          <circle cx="16" cy="16" r="4" fill="currentColor"/>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-purple-600 flex-shrink-0" style={{ minWidth: 32, minHeight: 32 }}>
+                          <circle cx="12" cy="12" r="12" fill="#334155"/>
+                          <circle cx="12" cy="12" r="5" fill="currentColor"/>
                         </svg>
                         <div className="flex justify-center items-center text-white text-lg font-normal font-['Work_Sans'] leading-snug">
                           <a
