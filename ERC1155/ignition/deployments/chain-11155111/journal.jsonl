@@ -1,8 +1,0 @@
-
-{"chainId":11155111,"type":"DEPLOYMENT_INITIALIZE"}
-{"artifactId":"NFTModule#ERC1155","constructorArgs":[],"contractName":"ERC1155","dependencies":[],"from":"0x89322f7113a5c4c7a5223320fd949f58a47f1f05","futureId":"NFTModule#ERC1155","futureType":"NAMED_ARTIFACT_CONTRACT_DEPLOYMENT","libraries":{},"strategy":"basic","strategyConfig":{},"type":"DEPLOYMENT_EXECUTION_STATE_INITIALIZE","value":{"_kind":"bigint","value":"0"}}
-{"futureId":"NFTModule#ERC1155","networkInteraction":{"data":"0x","id":1,"type":"ONCHAIN_INTERACTION","value":{"_kind":"bigint","value":"0"}},"type":"NETWORK_INTERACTION_REQUEST"}
-{"futureId":"NFTModule#ERC1155","networkInteractionId":1,"nonce":0,"type":"TRANSACTION_PREPARE_SEND"}
-{"futureId":"NFTModule#ERC1155","networkInteractionId":1,"nonce":0,"transaction":{"fees":{"maxFeePerGas":{"_kind":"bigint","value":"1008126"},"maxPriorityFeePerGas":{"_kind":"bigint","value":"1000000"}},"hash":"0x6966b028e54ae6890ce61c6249ee14126d87bcb165f2c36538d45cc6d657b103"},"type":"TRANSACTION_SEND"}
-{"futureId":"NFTModule#ERC1155","hash":"0x6966b028e54ae6890ce61c6249ee14126d87bcb165f2c36538d45cc6d657b103","networkInteractionId":1,"receipt":{"blockHash":"0x50b51f8b0608afbf3aea5438a172ee5b44b956787dfd672cbfd087dc989df297","blockNumber":8448074,"contractAddress":"0x99168446Cd7Bc744Cd32CDf5222588a5Ac439B8E","logs":[],"status":"SUCCESS"},"type":"TRANSACTION_CONFIRM"}
-{"futureId":"NFTModule#ERC1155","result":{"address":"0x99168446Cd7Bc744Cd32CDf5222588a5Ac439B8E","type":"SUCCESS"},"type":"DEPLOYMENT_EXECUTION_STATE_COMPLETE"}
