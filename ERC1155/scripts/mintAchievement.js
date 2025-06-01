@@ -36,7 +36,6 @@ const ACHIEVEMENTS = {
 
 async function mintNFT(recipientAddress, achievementId, amount = 1) {
   try {
-    recipientAddress = "0x537Cdb04E3ea482eB705880eB38a921A615BE40C";
     console.log("minting NFT...");
     
     const [signer] = await ethers.getSigners();
@@ -155,6 +154,25 @@ async function mintBatch(recipientAddress, achievementIds, amounts) {
 }
 
 async function main() {
+  // Check if called from Python service via environment variables
+  if (process.env.MINT_RECIPIENT) {
+    if (process.env.MINT_BATCH === "true") {
+      // Batch minting
+      const recipient = process.env.MINT_RECIPIENT;
+      const ids = process.env.MINT_ACHIEVEMENT_IDS.split(',').map(Number);
+      const amounts = process.env.MINT_AMOUNTS.split(',').map(Number);
+      await mintBatch(recipient, ids, amounts);
+    } else {
+      // Single minting
+      const recipient = process.env.MINT_RECIPIENT;
+      const achievementId = parseInt(process.env.MINT_ACHIEVEMENT_ID);
+      const amount = parseInt(process.env.MINT_AMOUNT || "1");
+      await mintNFT(recipient, achievementId, amount);
+    }
+    return;
+  }
+
+  // Original command line interface
   const args = process.argv.slice(2);
   
   if (args.length === 0) {
