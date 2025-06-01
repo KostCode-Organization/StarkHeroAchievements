@@ -271,7 +271,7 @@ def get_closed_issues(token, username):
     print(f"DEBUG: Found {len(activity_items)} activity items from {len(contribution_days)} unique days")
 
     if not contribution_days:
-        return {"activity": activity_items, "contribution_days": []}
+        return {"activity": activity_items, "used_ai": diffs if diffs else ["Not repoes found"], "contribution_days": []}
 
     from datetime import datetime, timedelta
 
