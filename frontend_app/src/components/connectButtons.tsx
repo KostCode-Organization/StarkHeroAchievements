@@ -9,7 +9,7 @@ interface ConnectButtons {
 }
 
 const ConnectButtons = ({ withoutWallet }: ConnectButtons) => {
-  const [error, setError] = useState<string | null>(null);
+  const [_, setError] = useState<string | null>(null);
   const { githubUser, setGithubUser, setUsedAI, setGithubActivity, setGithubContributionDays, wallet, setWallet } = useGithubUser();
 
   const connectWallet = async () => {
