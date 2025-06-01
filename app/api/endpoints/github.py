@@ -33,7 +33,7 @@ def github_login():
 async def github_callback(request: Request, background_tasks: BackgroundTasks):
     """Handle GitHub OAuth callback (exchange code for token, etc)."""
     code = request.query_params.get("code")
-    redirect_uri = request.query_params.get("redirect_uri") or "http://localhost:3000/"
+    redirect_uri = request.query_params.get("redirect_uri") or "http://64.226.116.114:3000/"
     parsed = urlparse(redirect_uri)
     frontend_origin = f"{parsed.scheme}://{parsed.netloc}"
     async with httpx.AsyncClient() as client:
@@ -80,20 +80,21 @@ async def github_callback(request: Request, background_tasks: BackgroundTasks):
         gh_user["assigned_issues"] = assigned_issues
         activity_data = get_closed_issues(access_token, gh_user['login'])
     # Encode user, activity, and contribution_days as base64 JSON and redirect to frontend
-    key = secrets.token_urlsafe(16)
-    GITHUB_DATA_CACHE[key] = {
-        "data": {
-            "user": gh_user,
-            "activity": activity_data["activity"],  # Changed from "closed" to "activity"
-            "contribution_days": activity_data["contribution_days"]
-        },
-        "timestamp": time.time()
-    }
-    print(f"DEBUG: Stored data with key: {key}")
-    print(f"DEBUG: Cache now contains keys: {list(GITHUB_DATA_CACHE.keys())}")
-    # No immediate cleanup - let the data persist for the frontend to fetch
-    redirect_url = f"{frontend_origin}/?github_key={key}"
-    return RedirectResponse(redirect_url)
+        key = secrets.token_urlsafe(16)
+        GITHUB_DATA_CACHE[key] = {
+            "data": {
+                "user": gh_user,
+                "used_ai": activity_data["used_ai"],
+                "activity": activity_data["activity"],  # Changed from "closed" to "activity"
+                "contribution_days": activity_data["contribution_days"]
+            },
+            "timestamp": time.time()
+        }
+        print(f"DEBUG: Stored data with key: {key}")
+        print(f"DEBUG: Cache now contains keys: {list(GITHUB_DATA_CACHE.keys())}")
+        # No immediate cleanup - let the data persist for the frontend to fetch
+        redirect_url = f"{frontend_origin}/?github_key={key}"
+        return RedirectResponse(redirect_url)
 
 @router.post("/github/token")
 async def github_token(code: str = Body(..., embed=True)):

@@ -100,7 +100,6 @@ export default function Contributions() {
     return labels;
   }, [months, weeksInYear]);
 
-  // Calculate total contributions - should match what we're showing in recent activity (all issues, not just displayed ones)
   const totalContributions = useMemo(() => {
     if (githubActivity && Array.isArray(githubActivity)) {
       return githubActivity.filter(item => 
@@ -114,12 +113,11 @@ export default function Contributions() {
     <div className="self-stretch flex flex-col justify-start items-start gap-7">
       <div className="self-stretch p-5 bg-slate-950 rounded-2xl outline outline-2 outline-offset-[-2px] outline-slate-900 flex flex-col justify-start items-start gap-3.5 overflow-hidden">
         <div className="flex justify-between items-center w-full">
-          <div className="text-white text-3xl font-bold font-['Work_Sans'] leading-9">Contribution heatmap</div>
+          <div className="text-white text-2xl font-bold font-['Work_Sans'] leading-9">Contribution heatmap</div>
           <div className="text-white text-lg font-medium font-['Work_Sans']">
             {totalContributions} contributions
           </div>
         </div>
-        {/* Month labels aligned with weeks */}
         <div className="relative w-full mb-2">
           <div className="grid" style={{ gridTemplateColumns: `repeat(${weeksInYear}, minmax(0, 1fr))`, gap: '4px' }}>
             {Array.from({ length: weeksInYear }, (_, i) => {
@@ -132,7 +130,6 @@ export default function Contributions() {
             })}
           </div>
         </div>
-        {/* Grid heatmap */}
         <div className="w-full overflow-x-auto">
           <div className="grid" style={{ gridTemplateColumns: `repeat(${weeksInYear}, minmax(0, 1fr))`, gap: '4px' }}>
             {contributions.map((week, weekIdx) => (
