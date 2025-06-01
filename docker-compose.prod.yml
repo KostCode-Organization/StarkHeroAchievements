@@ -43,6 +43,8 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    networks:
+      - app_network
 
   reverse-proxy:
     image: nginx
